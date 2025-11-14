@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Dronacharya Group of Institution — Online Bookstore</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#0f1724; /* deep */
+      --card:#0b1220;
+      --muted:#9aa4b2;
+      --accent:#4f46e5;
+      --glass: rgba(255,255,255,0.03);
+      --radius:12px;
+      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background-color:#f3f6fb;color:#0b1b2b;min-height:100vh;-webkit-font-smoothing:antialiased; font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;} 
+    header{display:flex;align-items:center;justify-content:space-between;padding:18px 28px;background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);backdrop-filter: blur(6px);}
+    .brand{display:flex;gap:14px;align-items:center}
+    .logo{width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#06b6d4);display:flex;align-items:center;justify-content:center;font-weight:700}
+    .logo span{font-size:18px}
+    h1{margin:0;font-size:18px}
+    .searchbar{display:flex;gap:10px;align-items:center;background:var(--glass);padding:8px;border-radius:999px;width:480px;max-width:48vw}
+    .searchbar input{flex:1;background:transparent;border:0;color:inherit;outline:none;padding:6px 8px}
+    .controls{display:flex;gap:12px;align-items:center}
+    button.btn{background:linear-gradient(90deg,var(--accent),#06b6d4);border:0;padding:8px 12px;border-radius:10px;color:#041122;font-weight:600;cursor:pointer}
+    main{padding:28px;display:grid;grid-template-columns:280px 1fr;gap:24px}
+    /* sidebar */
+    .sidebar{background:var(--card);padding:18px;border-radius:var(--radius);min-height:200px}
+    .sidebar h3{margin:6px 0 12px;color:var(--muted);font-size:13px}
+    .category{display:flex;flex-direction:column;gap:8px}
+    .category button{background:transparent;border:1px solid rgba(255,255,255,0.04);padding:8px;border-radius:8px;color:inherit;text-align:left;cursor:pointer}
+    .category button.active{background:rgba(79,70,229,0.12);border-color:rgba(79,70,229,0.25)}
+    /* book grid */
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:18px}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);padding:12px;border-radius:14px;display:flex;flex-direction:column;gap:8px}
+    .cover{height:180px;border-radius:10px;background:#071020;display:flex;align-items:center;justify-content:center;font-weight:700}
+    .title{font-size:15px;margin:0}
+    .meta{font-size:13px;color:var(--muted)}
+    .price-row{display:flex;justify-content:space-between;align-items:center}
+    .price{font-weight:700}
+    .small{font-size:12px;color:var(--muted)}
+    footer.cartbar{position:fixed;right:20px;bottom:20px;background:linear-gradient(180deg,#071228, #06111e);padding:12px;border-radius:12px;box-shadow:0 8px 30px rgba(2,6,23,0.6)}
+    .cartbtn{display:flex;gap:8px;align-items:center}
+    .badge{background:#ef4444;padding:4px 8px;border-radius:999px;color:white;font-weight:700}
+    /* modal */
+    .modal-backdrop{position:fixed;inset:0;background:rgba(2,6,23,0.6);display:none;align-items:center;justify-content:center;padding:24px}
+    .modal{background:linear-gradient(180deg,#061025,#071229);padding:18px;border-radius:12px;max-width:880px;width:100%;display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .qty{display:flex;align-items:center;gap:8px}
+    input[type=number]{width:60px;padding:6px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:inherit}
+    /* responsive */
+    @media(max-width:900px){main{grid-template-columns:1fr} .searchbar{max-width:70vw} .modal{grid-template-columns:1fr} .logo span{display:none}}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <div class="logo"><span>DB</span></div>
+      <div>
+        <h1>Dronacharya Group of Institution — Campus Books</h1>
+        <div class="small">College textbook & campus essentials</div>
+      </div>
+    </div>
+
+    <nav style="display:flex;gap:12px;align-items:center">
+      <a href="#home" style="text-decoration:none;color:inherit;padding:8px 10px;border-radius:8px">Home</a>
+      <a href="#register" style="text-decoration:none;color:inherit;padding:8px 10px;border-radius:8px">Register</a>
+      <a href="#login" style="text-decoration:none;color:inherit;padding:8px 10px;border-radius:8px">Login</a>
+      <div class="searchbar" style="margin-left:12px">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden><path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" opacity="0.9"/><circle cx="11" cy="11" r="6" stroke="currentColor" stroke-width="1.6" opacity="0.9"/></svg>
+        <input id="search" placeholder="Search by title, author, ISBN..." />
+      </div>
+      <button class="btn" id="viewCartBtn">View Cart (<span id="cart-count">0</span>)</button>
+    </nav>
+  </header>
+
+  <main>
+    <aside class="sidebar">
+      <h3>Categories</h3>
+      <div class="category" id="categories"></div>
+      <h3 style="margin-top:18px">Sort</h3>
+      <div style="display:flex;gap:8px;margin-top:6px">
+        <select id="sort" style="flex:1;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit">
+          <option value="popular">Most popular</option>
+          <option value="price-asc">Price: Low → High</option>
+          <option value="price-desc">Price: High → Low</option>
+          <option value="newest">Newest</option>
+        </select>
+      </div>
+    </aside>
+
+    <section>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <h2 style="margin:0">Available Books</h2>
+        <div class="small" id="results-count">Showing 0 books</div>
+      </div>
+
+      <div class="grid" id="bookGrid"></div>
+    </section>
+  </main>
+
+  <!-- Registration Section -->
+  <section id="register" style="max-width:900px;margin:28px auto;padding:18px;background:#ffffff;border-radius:12px;box-shadow:0 6px 20px rgba(9,30,66,0.08)">
+    <h2>Register — Dronacharya Campus Bookstore</h2>
+    <p class="small" style="color:#334155">Create an account to save your cart and orders.</p>
+    <form id="registerForm" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px">
+      <input name="fname" placeholder="First name" required style="padding:10px;border-radius:8px;border:1px solid #e2e8f0" />
+      <input name="lname" placeholder="Last name" required style="padding:10px;border-radius:8px;border:1px solid #e2e8f0" />
+      <input name="email" type="email" placeholder="College email" required style="padding:10px;border-radius:8px;border:1px solid #e2e8f0" />
+      <input name="phone" placeholder="Phone (optional)" style="padding:10px;border-radius:8px;border:1px solid #e2e8f0" />
+      <input name="password" type="password" placeholder="Password" required style="padding:10px;border-radius:8px;border:1px solid #e2e8f0" />
+      <input name="confirm" type="password" placeholder="Confirm password" required style="padding:10px;border-radius:8px;border:1px solid #e2e8f0" />
+      <div style="grid-column:1 / -1;display:flex;gap:8px;justify-content:flex-end">
+        <button type="submit" class="btn">Create account</button>
+        <a href="#login" style="align-self:center">Already have an account? Login</a>
+      </div>
+    </form>
+  </section>
+
+  <!-- Login Section -->
+  <section id="login" style="max-width:600px;margin:28px auto;padding:18px;background:#ffffff;border-radius:12px;box-shadow:0 6px 20px rgba(9,30,66,0.08)">
+    <h2>Login — Dronacharya Campus Bookstore</h2>
+    <form id="loginForm" style="display:flex;flex-direction:column;gap:12px;margin-top:12px">
+      <input name="email" type="email" placeholder="College email" required style="padding:10px;border-radius:8px;border:1px solid #e2e8f0" />
+      <input name="password" type="password" placeholder="Password" required style="padding:10px;border-radius:8px;border:1px solid #e2e8f0" />
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <label class="small" style="color:#475569"><input type="checkbox" name="remember" /> Remember me</label>
+        <a href="#register">Create account</a>
+      </div>
+      <div style="display:flex;justify-content:flex-end">
+        <button type="submit" class="btn">Login</button>
+      </div>
+    </form>
+  </section>
+
+  <footer class="cartbar">
+    <div style="display:flex;gap:12px;align-items:center">
+      <div class="cartbtn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M6 6h14l-1.6 9.1a2 2 0 0 1-1.98 1.62H8.3a2 2 0 0 1-1.98-1.68L5 4H3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div style="text-align:left">
+          <div style="font-weight:700">Cart</div>
+          <div class="small" id="cart-total">₹0.00 — 0 items</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn" id="checkoutBtn">Checkout</button>
+      </div>
+    </div>
+  </footer>
+
+  <!-- modal -->
+  <div class="modal-backdrop" id="modal">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div>
+        <div class="cover" id="modalCover">IMG</div>
+      </div>
+      <div>
+        <h3 id="modalTitle">Title</h3>
+        <div class="small" id="modalAuthor">Author</div>
+        <p id="modalDesc" style="margin-top:12px;color:var(--muted)">Description</p>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px">
+          <div>
+            <div class="price" id="modalPrice">₹0</div>
+            <div class="small" id="modalEdition">Edition • ISBN</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end">
+            <div class="qty">
+              <label class="small">Qty</label>
+              <input type="number" id="modalQty" value="1" min="1" />
+            </div>
+            <div style="display:flex;gap:8px">
+              <button class="btn" id="addToCart">Add to cart</button>
+              <button id="closeModal" style="padding:8px 10px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:inherit">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Sample book catalog - replace with server data or JSON
+    const books = [
+      {id:1,title:"Discrete Mathematics and Its Applications",author:"R. Rosen",price:799,category:"Mathematics",edition:"7th",isbn:"9780073383095",desc:"A classic textbook covering logic, set theory, combinatorics, and graph theory."},
+      {id:2,title:"Introduction to Algorithms",author:"Cormen, Leiserson, Rivest, Stein",price:1299,category:"Computer Science",edition:"3rd",isbn:"9780262033848",desc:"Comprehensive algorithms text used in many university courses."},
+      {id:3,title:"Database System Concepts",author:"Silberschatz, Korth, Sudarshan",price:699,category:"Computer Science",edition:"6th",isbn:"9780073523323",desc:"Fundamental concepts of database systems and SQL."},
+      {id:4,title:"Organic Chemistry",author:"Morrison & Boyd",price:899,category:"Chemistry",edition:"6th",isbn:"9780131295428",desc:"Detailed coverage for undergraduate organic chemistry."},
+      {id:5,title:"Engineering Mechanics -Statics",author:"Hibbeler",price:549,category:"Engineering",edition:"14th",isbn:"9780133942651",desc:"Statics concepts and problem-solving strategies for engineers."},
+      {id:6,title:"Operating System Concepts",author:"Silberschatz, Galvin, Gagne",price:749,category:"Computer Science",edition:"9th",isbn:"9781118063330",desc:"Core principles of modern operating systems."},
+      {id:7,title:"Introduction to Probability",author:"Grimmett & Stirzaker",price:499,category:"Mathematics",edition:"3rd",isbn:"9780198572220",desc:"Probability theory with applications relevant for engineering and CS."},
+      {id:8,title:"Modern Control Engineering",author:"Ogata",price:799,category:"Engineering",edition:"5th",isbn:"9780136156734",desc:"Control systems analysis and design for engineers."}
+    ];
+
+    // state
+    let state = {
+      query:'',
+      category:'All',
+      sort:'popular',
+      cart: JSON.parse(localStorage.getItem('cb_cart')||'{}')
+    }
+
+    // helpers
+    function formatINR(n){return '₹'+n.toFixed(2)}
+
+    // render categories
+    function renderCategories(){
+      const cats = ['All', ...new Set(books.map(b=>b.category))];
+      const container = document.getElementById('categories'); container.innerHTML='';
+      cats.forEach(c=>{
+        const btn = document.createElement('button'); btn.textContent=c; btn.className = (c===state.category)?'active':'';
+        btn.addEventListener('click',()=>{state.category=c; render();});
+        container.appendChild(btn);
+      });
+    }
+
+    // search & sort
+    document.getElementById('search').addEventListener('input', (e)=>{state.query=e.target.value; render();});
+    document.getElementById('sort').addEventListener('change', (e)=>{state.sort=e.target.value; render();});
+
+    // render grid
+    function render(){
+      const grid = document.getElementById('bookGrid'); grid.innerHTML='';
+      let results = books.filter(b=>{
+        const q = state.query.trim().toLowerCase();
+        if(state.category!=='All' && b.category!==state.category) return false;
+        if(!q) return true;
+        return b.title.toLowerCase().includes(q) || b.author.toLowerCase().includes(q) || (b.isbn||'').includes(q);
+      });
+      // sort
+      if(state.sort==='price-asc') results.sort((a,b)=>a.price-b.price);
+      else if(state.sort==='price-desc') results.sort((a,b)=>b.price-a.price);
+      else if(state.sort==='newest') results.sort((a,b)=>b.id-b.id); // placeholder
+
+      document.getElementById('results-count').textContent = `Showing ${results.length} books`;
+
+      results.forEach(b=>{
+        const c = document.createElement('div'); c.className='card';
+        c.innerHTML = `
+          <div class="cover">${b.title.split(' ').slice(0,2).map(s=>s[0]).join('')}</div>
+          <div>
+            <h4 class="title">${b.title}</h4>
+            <div class="meta">${b.author}</div>
+          </div>
+          <div style="margin-top:auto">
+            <div class="price-row">
+              <div class="price">${formatINR(b.price)}</div>
+              <div style="display:flex;gap:8px">
+                <button data-id="${b.id}" class="btn view">View</button>
+                <button data-id="${b.id}" class="btn add">Add</button>
+              </div>
+            </div>
+            <div class="small">${b.edition} • ${b.isbn}</div>
+          </div>
+        `;
+        grid.appendChild(c);
+      });
+
+      // attach events
+      document.querySelectorAll('.card .view').forEach(btn=>btn.addEventListener('click', (e)=>{openModal(parseInt(e.target.dataset.id))}));
+      document.querySelectorAll('.card .add').forEach(btn=>btn.addEventListener('click', (e)=>{addToCart(parseInt(e.target.dataset.id),1)}));
+      updateCartUI();
+    }
+
+    // modal behavior
+    const modal = document.getElementById('modal');
+    function openModal(id){
+      const b = books.find(x=>x.id===id); if(!b) return;
+      document.getElementById('modalTitle').textContent = b.title;
+      document.getElementById('modalAuthor').textContent = b.author;
+      document.getElementById('modalDesc').textContent = b.desc;
+      document.getElementById('modalPrice').textContent = formatINR(b.price);
+      document.getElementById('modalEdition').textContent = `${b.edition} • ${b.isbn}`;
+      document.getElementById('modalCover').textContent = b.title.split(' ').slice(0,2).map(s=>s[0]).join('');
+      document.getElementById('modalQty').value = 1;
+      document.getElementById('addToCart').dataset.id = b.id;
+      modal.style.display='flex';
+    }
+    document.getElementById('closeModal').addEventListener('click', ()=>{modal.style.display='none'});
+    modal.addEventListener('click',(e)=>{if(e.target===modal) modal.style.display='none'});
+
+    // cart functions
+    function saveCart(){ localStorage.setItem('cb_cart', JSON.stringify(state.cart)); }
+    function addToCart(id, qty=1){ state.cart[id] = (state.cart[id]||0) + qty; saveCart(); updateCartUI(); }
+    document.getElementById('addToCart').addEventListener('click',(e)=>{ const id=parseInt(e.target.dataset.id); const q=parseInt(document.getElementById('modalQty').value)||1; addToCart(id,q); modal.style.display='none'; });
+
+    function updateCartUI(){
+      const ids = Object.keys(state.cart).map(n=>parseInt(n));
+      let count=0, total=0;
+      ids.forEach(id=>{ const b=books.find(x=>x.id===id); if(b){count += state.cart[id]; total += b.price * state.cart[id];}});
+      document.getElementById('cart-count').textContent = count;
+      document.getElementById('cart-total').textContent = `${formatINR(total)} — ${count} items`;
+      document.getElementById('cart-count').textContent = count;
+    }
+
+    // view cart button shows a simple alert (placeholder for full cart page)
+    document.getElementById('viewCartBtn').addEventListener('click', ()=>{
+      showCartDialog();
+    });
+
+    function showCartDialog(){
+      const ids = Object.keys(state.cart).map(n=>parseInt(n));
+      if(ids.length===0){alert('Your cart is empty'); return}
+      let lines = [];
+      let total=0;
+      ids.forEach(id=>{ const b=books.find(x=>x.id===id); if(b){lines.push(`${b.title} × ${state.cart[id]} — ${formatINR(b.price*state.cart[id])}`); total+=b.price*state.cart[id];}});
+      lines.push(''); lines.push('Total: '+formatINR(total));
+      lines.push(''); lines.push('Note: This is a demo checkout. Integrate a payment gateway/server to complete orders.');
+      alert(lines.join('\n'));
+    }
+
+    // checkout placeholder
+    document.getElementById('checkoutBtn').addEventListener('click', ()=>{
+      showCartDialog();
+    });
+
+    // initialize
+    renderCategories(); render();
+
+    // small accessibility: esc to close modal
+    document.addEventListener('keydown', e=>{ if(e.key==='Escape') modal.style.display='none' });
+  </script>
+</body>
+</html>
